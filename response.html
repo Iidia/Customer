@@ -1,0 +1,469 @@
+<!DOCTYPE html><html><head><title>FavQs  - FavQs API v2</title><link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" /><link href="//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet" /><link href="https://fonts.googleapis.com/css?family=Grand+Hotel" rel="stylesheet" type="text/css" /><link rel="stylesheet" media="all" href="/assets/application-4ca6a2c4a955fa834a42975c2fc8ea24c9eecc0576bc6c96bc678392fba11394.css" data-turbolinks-track="reload" /><script src="/assets/application-e27580dae1e688296a7d4d310c5ba4dd26e8cddf3de9d7cbba75e420a3691ca3.js" data-turbolinks-track="reload"></script><script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script><script src="//unpkg.com/@elastic/apm-rum@5.9.1/dist/bundles/elastic-apm-rum.umd.min.js"></script><meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="MH/m/C/mh4JeHNPVgCvjSPmcUq876GEyOMQcivtQzf4X7xcBXTfe7TjW7f03dx2H/WgHeX2A8raVIWkEjZWZQQ==" /><meta content="width=device-width, initial-scale=1.0" name="viewport" /><meta content="yes" name="apple-mobile-web-app-capable" /><link href="https://favqs.s3.amazonaws.com/q16.png" rel="shortcut icon" /><link href="https://favqs.s3.amazonaws.com/q57.png" rel="apple-touch-icon" /><link href="https://favqs.s3.amazonaws.com/q72.png" rel="apple-touch-icon" sizes="72x72" /><link href="https://favqs.s3.amazonaws.com/q114.png" rel="apple-touch-icon" sizes="114x114" /><link href="https://favqs.s3.amazonaws.com/q144.png" rel="apple-touch-icon" sizes="144x144" /></head><body class="container"><div class="header"><div class="account pull-right"><div id="account"><a href="/new">Add a Quote</a> &nbsp;&middot;&nbsp; <a id="login-button" href="/login">Login</a></div><a class="account-minimal" style="font-size: 1.7em;" href="/about"><span class="glyphicon glyphicon-plus"></span></a> &nbsp; <a class="account-minimal" style="font-size: 1.8em;" id="login-button-minimal" href="/login"><span class="glyphicon glyphicon-user"></span></a></div><h3><a class="logo" href="/"><img src="/assets/q144-46020d9b2acace90020eb8bba5cbd91f49765c9c5f2b37d1500d41673a04e484.png" /><span>FavQs</span></a></h3><div class="slogan">Fav Quotes</div></div><div class="content"><div class="row"><div class="col-md-8"><h1>FavQs API v2</h1><p>Access our API at:</p><pre>https://favqs.com/api/</pre><p>For example, get the Quote of the Day:</p><pre><a href="https://favqs.com/api/qotd">https://favqs.com/api/qotd</a></pre><p>All data is sent and received as JSON.</p><hr /><h2>Headers</h2><div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseContentType"><h4 class="panel-title">Content Type</h4></a></div><div class="panel-collapse collapse" id="collapseContentType"><div class="panel-body"><p>All data is sent and received as JSON.</p><pre>Content-Type: application/json</pre><p>This must be set in the request headers when the request body contains content.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseStatusCodes"><h4 class="panel-title">Status Codes</h4></a></div><div class="panel-collapse collapse" id="collapseStatusCodes"><div class="panel-body"><p>There are three HTTP status codes that you need to check for: <code>200</code>, <code>404</code>, and <code>500</code>.</p><h5>Success</h5><p>A successful request returns a <code>200</code> response and no <code>error_code</code>.</p><h5>Validation Errors</h5><p>A request containing validation errors will return a <code>200</code> response (breaking from 4xx convention) <i>as well as </i> an <code>error_code</code> and <code>message</code> containing the reason (in English) for the validation error. A full list of error codes is available in the last section of this page if you would like to provide translations within your app.</p><h5>Summary</h5><p>To recap, check for a <code>200</code> to see if the server received and understood your request. Then check for the presence of an <code>error_code</code> to make sure there were no validation errors on your request. If there were, a <code>message</code> will be present and can be shown to the user.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseAuthorization"><h4 class="panel-title">Authorization</h4></a></div><div class="panel-collapse collapse" id="collapseAuthorization"><div class="panel-body"><p>An app token is required to access our API (except for the Quote of the Day).</p><p>For authorized API calls, pass your access token in via the header:</p><pre>Authorization: Token token="YOUR_APP_TOKEN"</pre><p>For example,</p><pre>$ curl -H 'Authorization: Token token="YOUR_APP_TOKEN"'</pre><p><span class="label label-default">Note:</span> &nbsp;This format will not work:</p><pre>Authorization: "YOUR_APP_TOKEN"</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseUserSession"><h4 class="panel-title">User Session</h4></a></div><div class="panel-collapse collapse" id="collapseUserSession"><div class="panel-body"><p>For calls that require a user session, pass the user token in via the header:</p><pre>User-Token: "USER_SESSION_TOKEN"</pre><p>The double quotes are optional.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseVersions"><h4 class="panel-title">Versions</h4></a></div><div class="panel-collapse collapse" id="collapseVersions"><div class="panel-body"><p>You can specify the version of the API in the header of each request.</p><pre>$ curl -H 'Accept: application/vnd.favqs.v2+json;'</pre><p><span class="label label-default">Note:</span> &nbsp;The API will default to the latest version if no version is specified.</p><p> It is a best practice to include the version of the API in each request, as the default version could change and break your app.</p><h5>Previous Versions</h5><p>Prior versions of the API include <a href="/api/v1">Version 1</a>.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseCaching"><h4 class="panel-title">Caching</h4></a></div><div class="panel-collapse collapse" id="collapseCaching"><div class="panel-body"><p>All responses include an ETag (Entity Tag) in the header.
+The ETag identifies the specific version of a returned resource.
+Use this value to check for changes to a
+resource by repeating the request and passing the
+ETag value in the If-None-Match header. If the resource
+has not changed, a 304 Not Modified status will be
+returned with an empty body. If the resource has
+changed, the request will return the resource.</p><h5>Response Header</h5><pre>HTTP/1.1 200 OK 
+...
+Etag: "558f0b9bea2e6910b1f93de7f4c0d47c"</pre><h5>Request</h5><pre>$ curl -I -H 'If-None-Match: "558f0b9bea2e6910b1f93de7f4c0d47c"'
+HTTP/1.1 304 Not Modified</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseRateLimiting"><h4 class="panel-title">Rate Limiting</h4></a></div><div class="panel-collapse collapse" id="collapseRateLimiting"><div class="panel-body"><p>Access to the API is rate limited. Each session is allowed 30 requests in a 20 second interval.</p><p>The remaining number of requests is returned in the HTTP header 'Rate-Limit-Remaining'.</p><h5>Response Header</h5><pre>HTTP/1.1 200 OK 
+...
+Rate-Limit-Remaining: 24</pre></div></div></div></div><hr /><h2>Session</h2><div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseCreateSession"><h4 class="panel-title">Create Session</h4></a></div><div class="panel-collapse collapse" id="collapseCreateSession"><div class="panel-body"><p>A user can only have one session per app token. If you have more than one app, please request another app token.</p><p>To create a session for the user, inside your application:</p><h5>Request</h5><pre>POST /api/session</pre><h5>Request Body</h5><p><span class="label label-default">Note:</span> A user can login with their username or email address.</p><pre>{ 
+  "user": {
+    "login": "login_or_email_here",
+    "password": "user_password_here"
+  }
+}</pre><h5>Response Body</h5><pre>{ 
+  "User-Token": "i4dwXAUNfSUEaTP90K5RWOWLap5cvc9mtjfpvA+c0uufP5GYnpYZUO4k5pTEpwsJHVHNhY5lbLn0cDRpiwsOKA==",
+  "login": "user_login",
+  "email": "user_email"
+}</pre><p>The "User-Token" should be added to the header for requests that require a user session.</p><h5>Errors</h5><p>An invalid login or password will return an error:</p><pre>{ 
+  "error_code": 21,
+  "message": "Invalid login or password."
+}</pre><p>An account that has been deactivated will return an error:</p><pre>{ 
+  "error_code": 22,
+  "message": "Login is not active. Contact support@favqs.com."
+}</pre><p>A request with missing data will return an error:</p><pre>{ 
+  "error_code": 23,
+  "message": "User login or password is missing."
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseDestroySession"><h4 class="panel-title">Destroy Session</h4></a></div><div class="panel-collapse collapse" id="collapseDestroySession"><div class="panel-body"><p>To destroy a user session (logout):</p><h5>Request</h5><pre>DELETE /api/session</pre><h5>Response Body</h5><pre>{ 
+  "message": "User logged out."
+}</pre><h5>Error</h5><p>If the user revokes account access to your app from their FavQs.com account page, you will see:</p><pre>{ 
+  "error_code": 20,
+  "message": "No user session found."
+}</pre></div></div></div></div><hr /><h2>Users</h2><div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseCreateUser"><h4 class="panel-title">Create User</h4></a></div><div class="panel-collapse collapse" id="collapseCreateUser"><div class="panel-body"><p>To create a new user:</p><h5>Request</h5><pre>POST /api/users</pre><h5>Request Body</h5><pre>{ 
+  "user": {
+    "login": "user_login_here",
+    "email": "user_email_here",
+    "password": "user_password_here"
+  }
+}</pre><h5>Validations</h5><table class="table table-condensed table-bordered"><tr><td style="width: 90px;">Login</td><td><li>Can only contain letters (a-z), numbers (0-9) and the underscore (_)</li><li>Length must be between 1 and 20 characters</li></td></tr><tr><td>Email</td><td><li>Must be a valid email address</li></td></tr><tr><td>Password</td><td><li>Length must be between 5 and 120 characters</li></td></tr></table><h5>Response Body</h5><p>Successful creation of a user will return a session token for that user.</p><pre>{ 
+  "User-Token": "i4dwXAUNfSUEaTP90K5RWOWLap5cvc9mtjfpvA+c0uufP5GYnpYZUO4k5pTEpwsJHVHNhY5lbLn0cDRpiwsOKA==",
+  "login": "user_login"
+}</pre><p>The "User-Token" should be added to the header for requests that require a user session.</p><h5>Errors</h5><p>If a user session already exists, you will get an error:</p><pre>{ 
+  "error_code": 31,
+  "message": "User session present."
+}</pre><p>If any of the fields contain validation errors, <code>message</code> will contain a list of validation errors separated by a semi-colon.</p><pre>{
+  "error_code": 32,
+  "message": "Email is not a valid email; Password is too short (minimum is 5 characters)"
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseGetUser"><h4 class="panel-title">Get User</h4></a></div><div class="panel-collapse collapse" id="collapseGetUser"><div class="panel-body"><p>To get a user:</p><h5>Request</h5><pre>GET /api/users/:login</pre><h5>Response</h5><p>A user session may query any user.</p><pre>{
+  "login": "gose",
+  "pic_url": "https://pbs.twimg.com/profile_images/2160924471/Screen_Shot_2012-04-23_at_9.23.44_PM_.png",
+  "public_favorites_count": 520,
+  "followers": 12,
+  "following": 23,
+  "pro": true
+}</pre><h5>Response</h5><p><span class="label label-default">Note:</span> &nbsp;User session required</p><p>If you request the user of the current user session, you will also get "account_details".</p><pre>{
+  "login": "gose",
+  "pic_url": "https://pbs.twimg.com/profile_images/2160924471/Screen_Shot_2012-04-23_at_9.23.44_PM_.png",
+  "public_favorites_count": 520,
+  "followers": 12,
+  "following": 23,
+  "pro": true,
+  "account_details": {
+    "email": "gose@favqs.com",
+    "private_favorites_count": 22,
+    "active_theme_id": 1,
+    "pro_expiration": "2015-03-13T07:19:06.133-05:00"
+  }
+}</pre><p>If the user is Pro, you will also get an <code>active_theme_id</code> and <code>pro_expiration</code> .</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseUpdateUser"><h4 class="panel-title">Update User</h4></a></div><div class="panel-collapse collapse" id="collapseUpdateUser"><div class="panel-body"><p><span class="label label-default">Note:</span> &nbsp;User session required</p><p>To update a user:</p><h5>Request</h5><pre>PUT /api/users/:login</pre><h5>Request Body</h5><p>All fields are optional.</p><pre>{ 
+  "user": {
+    "login": "user_login_here",
+    "email": "user_email_here",
+    "password": "user_password_here",
+    "twitter_username": "twitter_username_here",
+    "facebook_username": "facebook_username_here",
+    "pic": "twitter",
+    "profanity_filter": false,
+    "public_themes": false
+  }
+}</pre><h5>Validations</h5><p>Additional validations are listed under 'Create User'.</p><table class="table table-condensed table-bordered"><tr><td style="width: 120px;">Pic</td><td><li>Either <code>["twitter", "facebook", "gravater", ""]</code></li></td></tr><tr><td>Profanity Filter</td><td><li>Must be either <code>[true, false]</code>. True means it's enabled (default).</li></td></tr></table><h5>Response Body</h5><pre>{ 
+  "message": "User successfully updated."
+}</pre><h4>Profile Pics</h4><p>Setting a user's profile picture involves:</p><ol><li>Setting "twitter_username", "facebook_username", or relying on the user's email having a <a href="http://en.gravatar.com">Gravatar</a>.</li><li>Setting "pic" to either <code>["twitter", "facebook", "gravater", ""]</code></li></ol><h5>Request Body</h5><p>For example, to set user gose's pic to their Twitter handle 'sgose':</p><pre>{ 
+  "user": {
+    "twitter_username": "sgose",
+    "pic": "twitter"
+  }
+}</pre><h5>Errors</h5><p>If there is a validation error, one or more validation errors will be returned:</p><pre>{
+  "error_code": 32,
+  "message": {
+    "login": [
+      "has already been taken"
+    ],
+    "email": [
+      "is not a valid email"
+    ]
+  }
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseForgotPassword"><h4 class="panel-title">Forgot Password</h4></a></div><div class="panel-collapse collapse" id="collapseForgotPassword"><div class="panel-body"><p>To request a password reset.</p><h5>Request</h5><pre>POST /api/users/forgot_password</pre><h5>Request Body</h5><pre>{ 
+  "user": {
+    "email": "user_email_here"
+  }
+}</pre><h5>Response Body</h5><pre>{ 
+  "message": "A reset link has been emailed."
+}</pre><h5>Errors</h5><p>If the user login or email is not found, a 404 will be returned.</p><pre>{ 
+  "error_code": 30,
+  "message": "User not found."
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseResetPassword"><h4 class="panel-title">Reset Password</h4></a></div><div class="panel-collapse collapse" id="collapseResetPassword"><div class="panel-body"><p>To reset a password:</p><h5>Request</h5><pre>POST /api/users/reset_password</pre><h5>Request Body</h5><pre>{ 
+  "user": {
+    "email": "user_email_here",
+    "reset_password_token": "user_reset_password_token_here"
+  }
+}</pre><h5>Response Body</h5><pre>{ 
+  "message": "Password successfully updated. Please login."
+}</pre><h5>Errors</h5><p>If the password reset token is invalid:</p><pre>{ 
+  "error_code": 33,
+  "message": "Invalid password reset token."
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseFavQsPro"><h4 class="panel-title">FavQs Pro</h4></a></div><div class="panel-collapse collapse" id="collapseFavQsPro"><div class="panel-body"><p>To purchase a one year FavQs Pro subscription, open the following URL in a web view:</p><pre>GET /users/:login/pro</pre></div></div></div></div><hr /><h2>Typeahead</h2><div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseFilters"><h4 class="panel-title">Filters</h4></a></div><div class="panel-collapse collapse" id="collapseFilters"><div class="panel-body"><p>This resource provides a list of the public Authors, Tags, and Users in FavQs.</p><p>With this data, typeahead can be performed locally giving the user a fast response.</p><h5>Request</h5><pre>GET /api/typeahead</pre><h5>Response</h5><pre>{
+  "authors": [
+    {
+      "count": 118,
+      "permalink": "mark-twain",
+      "name": "Mark Twain"
+    },
+    ...
+  ],
+  "tags": [
+    {
+      "count": 44,
+      "permalink": "funny",
+      "name": "funny"
+    },
+    ...
+  ],
+  "users": [
+    {
+      "count": 432,
+      "permalink": "gose",
+      "name": "gose"
+    },
+    ...
+  ]
+}</pre></div></div></div></div><hr /><h2>Quotes</h2><div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseQOTD"><h4 class="panel-title">Quote of the Day <span class="text-muted"><small>(no token required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseQOTD"><div class="panel-body"><p>Get the Quote of the Day.</p><h5>Request</h5><pre>GET /api/qotd</pre><h5>Example</h5><pre>$ curl <a href="https://favqs.com/api/qotd">https://favqs.com/api/qotd</a></pre><h5>Response</h5><pre>{
+  "qotd_date": "2014-07-04T03:00:00.000-05:00",
+  "quote": {
+    "id": 17025,
+    "favorites_count": 0,
+    "dialogue": false,
+    "favorite": false,
+    "tags": [
+      "equality",
+      "men"
+    ],
+    "url": "http://localhost:3000/quotes/abraham-lincoln/17025-fourscore-and-",
+    "upvotes_count": 1,
+    "downvotes_count": 0,
+    "author": "Abraham Lincoln",
+    "author_permalink": "abraham-lincoln",
+    "body": "Fourscore and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal."
+  }
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseListQuotes"><h4 class="panel-title">List Quotes</h4></a></div><div class="panel-collapse collapse" id="collapseListQuotes"><div class="panel-body"><p>A list of quotes, paged 25 at a time.</p><h5>Request</h5><pre>GET /api/quotes</pre><h5>Response</h5><pre>{
+  "page": 1,
+  "last_page": false,
+  "quotes": [
+    {
+      "tags": [
+        "linux",
+        "programming",
+        "code",
+        "finnish-american"
+      ],
+      "favorite": false,
+      "author_permalink": "linus-torvalds",
+      "body": "Talk is cheap. Show me the code.",
+      "id": 253,
+      "favorites_count": 1,
+      "upvotes_count": 0,
+      "downvotes_count": 0,
+      "dialogue": false,
+      "author": "Linus Torvalds",
+      "url": "https://favqs.com/quotes/linus-torvalds/253-talk-is-cheap-s-"
+    },
+    ...
+  ]
+}</pre><h3>Optional URL Parameters</h3><p>The list of quotes can be refined via these filters.</p><table class="table table-condensed table-striped"><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td><b>filter</b></td><td>Type lookup or keyword search</td></tr><tr><td><b>type</b></td><td><code>['author', 'tag', 'user']</code></td></tr><tr><td><b>private</b></td><td>Get private quotes for the pro user session (e.g., private=true)</td></tr><tr><td><b>hidden</b></td><td>Get hidden quotes for the user session (e.g., hidden=true)</td></tr><tr><td><b>page</b></td><td>Page number (25 quotes per page)</td></tr></tbody></table><h3>Examples</h3><p>Get a random list of quotes:</p><pre>GET https://favqs.com/api/quotes/</pre><p>Search for quotes containing the word "funny":</p><pre>GET https://favqs.com/api/quotes/?filter=funny</pre><p>Get quotes that are tagged with "funny":</p><pre>GET https://favqs.com/api/quotes/?filter=funny&type=tag</pre><p>Get quotes by Mark Twain:</p><pre>GET https://favqs.com/api/quotes/?filter=Mark+Twain&type=author</pre><p>Get the <i>public</i> quotes favorited by user 'gose':</p><pre>GET https://favqs.com/api/quotes/?filter=gose&type=user</pre><p>Get the <i>private</i> quotes of the current user (pro session required):</p><pre>GET https://favqs.com/api/quotes/?private=1</pre><p>Search for <i>private</i> quotes of the current user session that contain the words "little book":</p><pre>GET https://favqs.com/api/quotes/?filter=little+book&private=1</pre><p>Get quotes hidden by the user:</p><pre>GET https://favqs.com/api/quotes/?hidden=1</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseGetQuote"><h4 class="panel-title">Get Quote</h4></a></div><div class="panel-collapse collapse" id="collapseGetQuote"><div class="panel-body"><h5>Request</h5><pre>GET /api/quotes/:quote_id</pre><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  ...
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseQuoteFav"><h4 class="panel-title">Fav Quote <span class="text-muted"><small>(user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseQuoteFav"><div class="panel-body"><p>To mark a quote as a user's favorite:</p><h5>Request</h5><pre>PUT /api/quotes/:quote_id/fav</pre><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  ...
+  "user_details": {
+    "favorite": true,
+    ...
+  }
+}</pre><h5>Errors</h5><pre>{ 
+  "error_code": 40,
+  "message": "Quote not found."
+}</pre><h5>Request</h5><p>To unmark a quote as a user's favorite:</p><pre>PUT /api/quotes/:quote_id/unfav</pre><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  ...
+  "user_details": {
+    "favorite": false,
+    ...
+  }
+}</pre><h5>Errors</h5><pre>{ 
+  "error_code": 41,
+  "message": "Private quotes cannot be unfav'd."
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseQuoteVote"><h4 class="panel-title">Vote on Quote <span class="text-muted"><small>(user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseQuoteVote"><div class="panel-body"><p>Users can vote a quote up or down to influence that quotes popularity.</p><p>Vote a quote up:</p><h5>Request</h5><pre>PUT /api/quotes/:quote_id/upvote</pre><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  ...
+  "user_details": {
+    "upvote": true,
+    "downvote": false,
+    ...
+  }
+}</pre><p>Vote a quote down:</p><h5>Request</h5><pre>PUT /api/quotes/:quote_id/downvote</pre><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  ...
+  "user_details": {
+    "upvote": false,
+    "downvote": true,
+    ...
+  }
+}</pre><p>To clear the vote on a quote:</p><h5>Request</h5><pre>PUT /api/quotes/:quote_id/clearvote</pre><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  ...
+  "user_details": {
+    "upvote": false,
+    "downvote": false,
+    ...
+  }
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseTagQuote"><h4 class="panel-title">Tag Quote <span class="text-muted"><small>(user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseTagQuote"><div class="panel-body"><p>To add Personal Tags to a quote:</p><h5>Request</h5><pre>PUT /api/quotes/:quote_id/tag</pre><p>The list of tags sent must include all of the user's personal tags for that quote.</p><h5>Request Body</h5><pre>{
+  "personal_tags": [
+    "simplicity",
+    "minimalism"
+  ]
+}</pre><p>If a tag is missing from the list, that personal tag will be removed from the quote.</p><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  ...
+  "user_details": {
+    "personal_tags": [
+      "simplicity",
+      "minimalism"
+    ]
+    ...
+  }
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseHideQuote"><h4 class="panel-title">Hide Quote <span class="text-muted"><small>(user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseHideQuote"><div class="panel-body"><p>To hide a quote:</p><h5>Request</h5><pre>PUT /api/quotes/:quote_id/hide</pre><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  ...
+  "user_details": {
+    "hidden": true,
+    ...
+  }
+}</pre><p>To unhide a quote:</p><h5>Request</h5><pre>PUT /api/quotes/:quote_id/unhide</pre><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  ...
+  "user_details": {
+    "hidden": false,
+    ...
+  }
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseAddQuote"><h4 class="panel-title">Add Quote <span class="text-muted"><small>(user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseAddQuote"><div class="panel-body"><p>Quotes added by Pro users are private initially and can be edited.</p><p>Quotes added by non-Pro users are public and cannot be edited.</p><p>To add a quote:</p><h5>Request</h5><pre>POST /api/quotes</pre><h5>Request Body</h5><pre>{
+  "quote": {
+    "author": "Mark Twain",
+    "body": "Never let your schooling interfere with your education."
+  }
+}</pre><p>To add a dialogue:</p><h5>Request</h5><pre>POST /api/quotes</pre><h5>Request Body</h5><pre>{
+  "quote": {
+    "lines": [
+      {
+        "author": "State Trooper",
+        "body": "Pullover!"
+      },
+      {
+        "author": "Harry Dunne",
+        "body": "No, it's a cardigan but thanks for noticing."
+      },
+      {
+        "author": "Lloyd Christmas",
+        "body": "Yeah, killer boots man!"
+      }
+    ],
+    "source": "Dumb & Dumber, 1994. Film",
+    "context": "While being pulled over by a State Trooper on a motorcycle.",
+    "tags": "funny, movie, dumb and dumber, police"
+  }
+}</pre><h5>Response Body</h5><p>The response is the same as Get Quote.</p><pre>{
+  "id": 123,
+  "author": "Mark Twain",
+  "body": "Never let your schooling interfere with your education."
+  ...
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseUpdateQuote"><h4 class="panel-title">Update Quote <span class="text-muted"><small>(pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseUpdateQuote"><div class="panel-body"><p>Updating a quote or dialogue requires the same request format as adding a quote.</p><h5>Request</h5><pre>PUT /api/quotes/:quote_id</pre><h5>Response</h5><p>The response is the same as Get Quote.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseDeleteQuote"><h4 class="panel-title">Delete Quote <span class="text-muted"><small>(pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseDeleteQuote"><div class="panel-body"><p>To delete a quote:</p><h5>Request</h5><pre>DELETE /api/quotes/:quote_id</pre><h5>Response Header</h5><pre>HTTP/1.1 200 OK </pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseMakeQuotePublic"><h4 class="panel-title">Make Quote Public <span class="text-muted"><small>(pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseMakeQuotePublic"><div class="panel-body"><p>To make a quote public:</p><h5>Request</h5><pre>PUT /api/quotes/:quote_id/publicize</pre><p>Once a quote is public, it cannot be edited and others will be able to see, fav it, etc.</p><h5>Response Body</h5><pre>{
+  "id": 4,
+  "author": "Albert Einstein",
+  "body": "Make everything as simple as possible, but not simpler.",
+  "private": false
+  ...</pre></div></div></div></div><hr /><h2>Activity</h2><div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseGetActivity"><h4 class="panel-title">Get Activity</h4></a></div><div class="panel-collapse collapse" id="collapseGetActivity"><div class="panel-body"><p>Get the activity of a user, tag, or author, sorted by recency.</p><h5>Request</h5><pre>GET /api/activities/</pre><p>If a user session is present and no parameters are given, the activites for that user will be returned.</p><h3>URL Parameters</h3><table class="table table-condensed table-striped"><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td><b>filter</b></td><td>Type lookup</td></tr><tr><td><b>type</b></td><td><code>['author', 'tag', 'user']</code></td></tr><tr><td><b>page</b></td><td>Page number (25 activities per page)</td></tr></tbody></table><h5>Response Body</h5><pre>{
+  "activities": [
+    {
+      "activity_id": 427,
+      "owner_type": "User",
+      "owner_id": "gose",
+      "owner_value": "gose",
+      "action": "favorited",
+      "trackable_id": 61003,
+      "trackable_type": "Quote",
+      "trackable_value": "Pleasure in the job puts perfection in the work. - Aristotle",
+      "message": "User gose favorited Quote \"Pleasure in the job puts perfection in the work.\" - Aristotle" 
+    },
+    {
+      "activity_id": 426,
+      "owner_type": "User",
+      "owner_id": "gose",
+      "owner_value": "gose",
+      "action": "followed",
+      "trackable_id": "chicago",
+      "trackable_type": "Tag",
+      "trackable_value": "chicago",
+      "message": "User gose followed Tag chicago"
+    },
+    ...
+  ]
+}</pre><h3>Examples</h3><p>Get the activities of user 'gose':</p><pre>GET https://favqs.com/api/activities/?type=user&filter=gose</pre><p>Get the activities of author Mark Twain:</p><pre>GET https://favqs.com/api/activities/?type=author&filter=Mark+Twain</pre><p>Get the activities of tag "funny":</p><pre>GET https://favqs.com/api/activities/?type=tag&filter=funny</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseDeleteActivity"><h4 class="panel-title">Delete Activity<span class="text-muted"><small> (user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseDeleteActivity"><div class="panel-body"><p>To delete an activity entry:</p><h5>Request</h5><pre>DELETE /api/activities/:activity_id</pre><p>Successful requests return a <code>200 OK</code> and empty body.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseFollow"><h4 class="panel-title">Follow <span class="text-muted"><small>(user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseFollow"><div class="panel-body"><p>To follow a user, tag, or author:</p><h5>Request</h5><pre>PUT /api/activities/follow/</pre><p>To unfollow a user, tag, or author:</p><h5>Request</h5><pre>PUT /api/activities/unfollow/</pre><h3>Required URL Parameters</h3><table class="table table-condensed table-striped"><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td><b>filter</b></td><td>Type lookup</td></tr><tr><td><b>type</b></td><td><code>['author', 'tag', 'user']</code></td></tr></tbody></table><p>Successful requests return a <code>200 OK</code>.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseGetFollowers"><h4 class="panel-title">Get Followers</h4></a></div><div class="panel-collapse collapse" id="collapseGetFollowers"><div class="panel-body"><p>To get the followers for a user, tag, or author:</p><h5>Request</h5><pre>GET /api/activities/followers/</pre><h3>Required URL Parameters</h3><table class="table table-condensed table-striped"><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td><b>filter</b></td><td>Type lookup</td></tr><tr><td><b>type</b></td><td><code>['author', 'tag', 'user']</code></td></tr></tbody></table><p>For example, get users who follow user 'gose':</p><pre>GET https://favqs.com/api/activities/followers?type=user&filter=gose</pre><h5>Response Body</h5><pre>{
+  "page": 1,
+  "last_page": true,
+  "users": [
+    "david",
+    "michael",
+    "john"
+  ]
+}</pre><p>Get users who follow tag 'funny':</p><pre>GET https://favqs.com/api/activities/followers?type=tag&filter=funny</pre><p>Get users who follow author 'Mark Twain':</p><pre>GET https://favqs.com/api/activities/followers?type=author&filter=mark-twain</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseGetFollowing"><h4 class="panel-title">Get Following</h4></a></div><div class="panel-collapse collapse" id="collapseGetFollowing"><div class="panel-body"><p>To get a list of users, tags, and authors a user is following:</p><h5>Request</h5><pre>GET /api/activities/following/</pre><p>Only users can follow authors, tags, and other users.</p><h5>Response Body</h5><pre>{
+  "page": 1,
+  "last_page": true,
+  "following": [
+    {
+      "following_type": "Author",
+      "following_id": "mark-twain",
+      "following_value": "Mark Twain"
+    },
+    {
+      "following_type": "Tag",
+      "following_id": "society",
+      "following_value": "society"
+    },
+    {
+      "following_type": "User",
+      "following_id": "david",
+      "following_value": "david"
+    }
+  ]
+}</pre><h3>Optional URL Parameters</h3><table class="table table-condensed table-striped"><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td><b>user</b></td><td>Username</td></tr></tbody></table><p>To see who is following the current user:</p><pre>GET https://favqs.com/api/activities/following</pre><p>To see who is following user 'gose':</p><pre>GET https://favqs.com/api/activities/following/?user=gose</pre></div></div></div></div><hr /><h2>Themes</h2><div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseDefaultTheme"><h4 class="panel-title">Default Theme</h4></a></div><div class="panel-collapse collapse" id="collapseDefaultTheme"><div class="panel-body"><p>To get the default theme:</p><h5>Request</h5><pre>GET /api/themes/default</pre><h5>Response</h5><pre>{
+  "theme": {
+    "id": 1,
+    "name": "Default",
+    "font_name": "Helvetica Neue",
+    "font_color": "#555555",
+    "background_color": "#F5F5F5",
+    "accent_color": "#999999",
+    "button_color": "#468CC8",
+    "show_author": true,
+    "show_context": true,
+    "show_tags": false,
+    "show_source": false,
+    "show_quotation_marks": false,
+    "presentation_mode": false
+  }
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseGetThemes"><h4 class="panel-title">Get Themes<span class="text-muted"><small> (pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseGetThemes"><div class="panel-body"><p>To get a list of themes:</p><h5>Request</h5><pre>GET /api/themes</pre><h3>URL Parameters</h3><table class="table table-condensed table-striped"><thead><tr><th>Parameter</th><th>Description</th></tr></thead><tbody><tr><td><b>type</b></td><td><code>['user', 'templates']</code></td></tr><tr><td><b>login</b></td><td>User themes (if public)</td></tr></tbody></table><h5>Response Body</h5><pre>{
+  "themes": [
+    {
+      "id": 100,
+      "name": "My Theme",
+      "font_name": "Helvetica Neue",
+      "font_color": "#555555",
+      "background_color": "#F5F5F5",
+      "accent_color": "#999999",
+      "button_color": "#468CC8",
+      "show_author": true,
+      "show_context": true,
+      "show_tags": false,
+      "show_source": false,
+      "show_quotation_marks": false,
+      "presentation_mode": false
+    },
+    ...
+  ]
+}</pre><h3>Examples</h3><p>Get the themes for the current user:</p><pre>GET https://favqs.com/api/themes</pre><p>Get the theme templates:</p><pre>GET https://favqs.com/api/themes?type=templates</pre><p>Get the themes of user 'gose' (if public):</p><pre>GET https://favqs.com/api/themes?type=user&login=gose</pre><p>Themes are private by default, but a user may make their themes public.</p><p>A user can make their themes public by setting 'public_themes' to true on Update User.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseApplyTheme"><h4 class="panel-title">Apply Theme<span class="text-muted"><small> (pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseApplyTheme"><div class="panel-body"><p>A user can only apply a Theme if they own it. Otherwise the Theme must be copied first.</p><p>To apply a Theme:</p><h5>Request</h5><pre>PUT /api/themes/:id/apply</pre><p>Successful requests return a <code>200 OK</code> and empty body.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseClearTheme"><h4 class="panel-title">Clear Theme<span class="text-muted"><small> (pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseClearTheme"><div class="panel-body"><p>To clear the selected theme and use the default theme:</p><h5>Request</h5><pre>PUT /api/themes/clear</pre><p>Successful requests return a <code>200 OK</code> and empty body.</p></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseCreateTheme"><h4 class="panel-title">Create Theme<span class="text-muted"><small> (pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseCreateTheme"><div class="panel-body"><p>To create a Theme</p><h5>Request</h5><pre>POST /api/themes</pre><h5>Request Body</h5><pre>{
+  "theme": {
+    "name": "My Theme",
+    "font_name": "Helvetica Neue",
+    "font_color": "#555555",
+    "background_color": "#F5F5F5",
+    "accent_color": "#999999",
+    "button_color": "#468CC8",
+    "show_author": true,
+    "show_context": true,
+    "show_tags": false,
+    "show_source": false,
+    "show_quotation_marks": false,
+    "presentation_mode": false
+  }
+}</pre><p>The <code>presentation_mode</code> attribute can be used to prevent the display from going to sleep and auto-advancing quotes with a timer.</p><h5>Validations</h5><table class="table table-condensed table-bordered"><tr><td style="width: 150px;">Font Color</td><td><li>Required</li><li>Must be in HEX format (e.g., #123456)</li><li>Length must be 7 characters</li></td></tr><tr><td>Background Color</td><td><li>Required</li><li>Must be in HEX format (e.g., #123456)</li><li>Length must be 7 characters</li></td></tr><tr><td>Button Color</td><td><li>Required</li><li>Must be in HEX format (e.g., #123456)</li><li>Length must be 7 characters</li></td></tr><tr><td>Accent Color</td><td><li>Required</li><li>Must be in HEX format (e.g., #123456)</li><li>Length must be 7 characters</li></td></tr></table><h5>Response Body</h5><p>Successful creation of a theme will return the theme with an <code>id</code> assigned to it.</p><pre>{
+  "theme": {
+    "id": 100,
+    "name": "My Theme",
+    "font_name": "Helvetica Neue",
+    "font_color": "#555555",
+    "background_color": "#F5F5F5",
+    "accent_color": "#999999",
+    "button_color": "#468CC8",
+    "show_author": true,
+    "show_context": true,
+    "show_tags": false,
+    "show_source": false,
+    "show_quotation_marks": false,
+    "presentation_mode": false
+  }
+}</pre><p>If any of the fields contain validation errors, an <code>error_code </code> will be present and a <code>message</code> will contain a list of validation errors separated by a semi-colon.</p><pre>{
+  "error_code": 83,
+  "message": "Font color can't be blank; Font color is the wrong length (should be 7 characters); Font color must be in HEX format"
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseCopyTheme"><h4 class="panel-title">Copy Theme<span class="text-muted"><small> (pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseCopyTheme"><div class="panel-body"><p><span class="label label-default">Note:</span> &nbsp;Only templates and public user themes can by copied.</p><p>To copy a Theme</p><h5>Request</h5><pre>POST /api/themes/:id/copy</pre><h5>Response Body</h5><pre>{
+  "theme": {
+    "name": "Theme Name",
+    "font_name": "Helvetica Neue",
+    "font_color": "#555555",
+    "background_color": "#F5F5F5",
+    "accent_color": "#999999",
+    "button_color": "#468CC8",
+    "show_author": true,
+    "show_context": true,
+    "show_tags": false,
+    "show_source": false,
+    "show_quotation_marks": false,
+    "presentation_mode": false
+  }
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseUpdateTheme"><h4 class="panel-title">Update Theme<span class="text-muted"><small> (pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseUpdateTheme"><div class="panel-body"><p>To update a Theme</p><h5>Request</h5><pre>PUT /api/themes/:id</pre><h5>Response Header</h5><p>Successful requests return a <code>200 OK</code> and empty body.</p><pre>HTTP/1.1 200 OK </pre><p>If any of the fields contain validation errors, <code>message</code> will contain a list of validation errors separated by a semi-colon.</p><pre>{
+  "error_code": 83,
+  "message": "Font color can't be blank; Font color is the wrong length (should be 7 characters); Font color must be in HEX format"
+}</pre></div></div></div><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseDeleteTheme"><h4 class="panel-title">Delete Theme<span class="text-muted"><small> (pro user session required)</small></span></h4></a></div><div class="panel-collapse collapse" id="collapseDeleteTheme"><div class="panel-body"><p>To delete a Theme</p><h5>Request</h5><pre>DELETE /api/themes/:id</pre><p>Successful requests return a <code>200 OK</code> and empty body.</p></div></div></div></div><hr /><h2>Errors</h2><div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><a data-toggle="collapse" href="#collapseErrorCodes"><h4 class="panel-title">Error Codes</h4></a></div><div class="panel-collapse collapse" id="collapseErrorCodes"><div class="panel-body"><p>Successful requests return a <code>200 OK</code> response, and no <code>error_code</code>.</p><p>If your request returns a <code>200 OK</code> and an <code>error_code</code>, the request could not be completed.</p><h5>Response Body</h5><pre>{ 
+  "error_code": 21,
+  "message": "Invalid login or password."
+}</pre><p>An additional <code>message</code> will indicate the reason, but you can present your own message based off the <code>error_code</code>.</p><h5>Error Codes</h5><table class="table table-condensed table-bordered"><tr><td style="width: 90px;">10</td><td>Invalid request.</td></tr><tr><td>11</td><td>Permission denied.</td></tr><tr><td>20</td><td>User session not found.</td></tr><tr><td>21</td><td>Invalid login or password.</td></tr><tr><td>22</td><td>Login is not active. Contact support@favqs.com.</td></tr><tr><td>23</td><td>User login or password is missing.</td></tr><tr><td>24</td><td>Pro user required</td></tr><tr><td>30</td><td>User not found.</td></tr><tr><td>31</td><td>User session already present.</td></tr><tr><td>32</td><td>A list of 'user' validation errors.</td></tr><tr><td>33</td><td>Invalid password reset token.</td></tr><tr><td>40</td><td>Quote not found.</td></tr><tr><td>41</td><td>Private quotes cannot be unfav'd.</td></tr><tr><td>42</td><td>Could not create quote.</td></tr><tr><td>50</td><td>Author not found.</td></tr><tr><td>60</td><td>Tag not found.</td></tr><tr><td>70</td><td>Activity not found.</td></tr><tr><td>80</td><td>Theme not found.</td></tr><tr><td>81</td><td>Themes not public.</td></tr><tr><td>82</td><td>Theme must be copied first.</td></tr><tr><td>83</td><td>A list of 'theme' validation errors.</td></tr></table><p>Additional error scenarios include non-200 codes in the response header.</p><table class="table table-condensed table-bordered"><tr><td style="width: 90px;">404</td><td>HTTP/1.1 404 Not Found</td></tr><tr><td>500</td><td>HTTP/1.1 500 Internal Server Error</td></tr></table></div></div></div></div><hr /></div><div class="col-md-4"><h2 style="margin-top: 20px;">Request API Key</h2><p>By using the FavQs API, you agree to our:</p><ul><li><a href="/api_terms">API Terms of Service</a></li></ul><p>Follow these steps to request access:</p><ol><li><a href="/login">Sign up</a> for an account</li><li>Visit your <a href="/api_keys">API Keys</a> page</li></ol></div></div></div><div class="footer"><p><a class="btn btn-link" style="padding: 5px 10px;" href="/about">About</a>&middot;<a class="btn btn-link" style="padding: 5px 10px;" href="/app">App</a>&middot;<a class="btn btn-link" style="padding: 5px 10px;" href="/slack">Slack</a>&middot;<a class="btn btn-link" style="padding: 5px 10px;" href="/api">API</a>&middot;<a class="btn btn-link" style="padding: 5px 10px;" href="/legal">Legal</a></p><p style="font-size: 0.9em;"><a href="http://www.facetedthought.com">Faceted Thought, LLC</a>&nbsp;&copy; 2013 - 2021</p></div><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-5628200-4', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body></html>
