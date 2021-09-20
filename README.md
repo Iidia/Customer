@@ -1,1 +1,1 @@
-# Customer
+{"error_code": 20, "message": "No user session found."}
